@@ -1,0 +1,11 @@
+{
+  "name": "Fill form",
+  "version": "0.1.0",
+  "description": "Automated fill forms on websites",
+  "default_locale": "en",
+  "manifest_version": 3,
+  "permissions": ["scripting", "activeTab"],
+  "action": {
+    "default_popup": "index.html"
+  }
+}
