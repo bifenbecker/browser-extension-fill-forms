@@ -4,7 +4,7 @@
   "description": "Automated fill forms on websites",
   "default_locale": "en",
   "manifest_version": 3,
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "identity"],
   "action": {
     "default_popup": "index.html"
   }

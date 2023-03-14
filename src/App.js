@@ -1,17 +1,21 @@
 // Pages
 import Popup from "./pages/Popup";
-import { makeStyles } from "@mui/styles";
 
-const useStyles = makeStyles(() => ({
-  wrapper: {
-    width: 500,
-    height: 500,
-    backgroundColor: "#fff",
+// MUI
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  status: {
+    danger: "red",
   },
-}));
+});
 
 function App() {
-  return <Popup />;
+  return (
+    <ThemeProvider theme={theme}>
+      <Popup />
+    </ThemeProvider>
+  );
 }
 
 export default App;
