@@ -1,8 +1,8 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
-  grid_container_form: {
-    height: "100%",
+  wrapper: {
+    padding: "20px 15px 0",
   },
 }));
 

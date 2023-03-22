@@ -10,7 +10,7 @@ import {
   PROFILE_ICON_TOOLTIP_PROFILE,
 } from "../../../utils/constants";
 // Pages
-import { LOGIN_PAGE_NAME, FILL_FORM_PAGE_NAME } from "../../../utils/constants";
+import { LOGIN_PAGE_NAME, PROFILE_PAGE_NAME } from "../../../utils/constants";
 
 // Components
 import BaseIcon from "../BaseIcon";
@@ -23,7 +23,7 @@ const ProfileIcon = (props) => {
 
   const handleChangePage = () =>
     isUserAuthenticated()
-      ? onChangePage(FILL_FORM_PAGE_NAME)
+      ? onChangePage(PROFILE_PAGE_NAME)
       : onChangePage(LOGIN_PAGE_NAME);
 
   return (

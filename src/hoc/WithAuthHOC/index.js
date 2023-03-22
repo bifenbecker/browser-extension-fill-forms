@@ -10,7 +10,6 @@ import { NEED_TO_LOGIN } from "../../utils/constants";
 import { isUserAuthenticated } from "../../utils/utils";
 
 const WithAuthHOC = (WrappedComponent) => (props) => {
-  console.log(isUserAuthenticated(), localStorage.getItem("access_token"));
   return isUserAuthenticated() ? (
     <WrappedComponent {...props} />
   ) : (

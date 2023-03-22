@@ -10,7 +10,7 @@ import AuthFormComp from "../../../components/AuthFormComp";
 import BaseLayout from "../../../components/Layouts/BaseLayout";
 
 // Constants
-import { FILL_FORM_PAGE_NAME } from "../../../utils/constants";
+import { PROFILE_PAGE_NAME } from "../../../utils/constants";
 
 // API
 import { loginUser } from "../../../api/auth";
@@ -33,7 +33,7 @@ const LoginPage = (props) => {
     loginUser(registerUserEmail, registerUserPassword)
       .then(() => {
         console.log("Login user ", registerUserEmail);
-        onChangePage(FILL_FORM_PAGE_NAME);
+        onChangePage(PROFILE_PAGE_NAME);
       })
       .catch((error) => {
         setRegisterUserError(error.message);

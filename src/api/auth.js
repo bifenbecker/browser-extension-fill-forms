@@ -3,13 +3,17 @@ import {
   SERVER_HOST,
   SERVER_PORT,
   API_URL_VERSION,
+  API_AUTH,
   REGISTER_API_ENDPOINT,
   LOGIN_API_ENDPOINT,
   ACCESS_TOKEN_NAME,
   REFRESH_TOKEN_NAME,
 } from "../utils/constants";
 
-const URL = `${SERVER_HOST}:${SERVER_PORT}/${API_URL_VERSION}`;
+// Utils
+import { validateResponse } from "../utils/utils";
+
+const URL = `${SERVER_HOST}:${SERVER_PORT}/${API_URL_VERSION}/${API_AUTH}`;
 
 const getRequestOptionsToPOSTRequest = (body, additionalOptions = {}) => ({
   method: "POST",
@@ -17,21 +21,6 @@ const getRequestOptionsToPOSTRequest = (body, additionalOptions = {}) => ({
   body: JSON.stringify(body),
   ...additionalOptions,
 });
-
-const validateResponse = async (response) => {
-  const isJson = response.headers
-    .get("content-type")
-    ?.includes("application/json");
-  const data = isJson && (await response.json());
-
-  // check for error response
-  if (!response.ok) {
-    // get error message from body or default to response status
-    const error = data || response.status;
-    return Promise.reject(error);
-  }
-  return data;
-};
 
 const setAuthTokens = (tokens) => {
   localStorage.setItem(ACCESS_TOKEN_NAME, tokens.access);
