@@ -1,0 +1,23 @@
+{
+  "name": "Fill form",
+  "version": "0.1.0",
+  "description": "Automated fill forms on websites",
+  "default_locale": "en",
+  "manifest_version": 3,
+  "permissions": ["scripting", "activeTab", "identity", "storage"],
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.ikea.com/*/shoppingcart/"],
+      "js": ["content_scripts/ikea_fill_script.js"]
+    },
+    {
+      "matches": [
+        "https://www.ikea.com/gb/en/order/continue/?checkoutVersion=v*&checkoutId=*"
+      ],
+      "js": ["content_scripts/ikea_script_fill.js"]
+    }
+  ]
+}
