@@ -10,12 +10,19 @@ import BaseLayout from "../../components/Layouts/BaseLayout";
 import CustomerDictSettingsEditComp from "../../components/CustomerDictSettingsGeneral/CustomerDictSettingsEditComp";
 // HOCs
 import WithAuthHOC from "../../hoc/WithAuthHOC";
+import WithFetchLoadingHOC from "../../hoc/WithFetchLoadingHoc";
+
+// Utils
+import { getCustomerSettingsOptions } from "../../api/customerSettings";
 
 // Styles
 import useStyles from "./styles";
 
 const CustomerDictSettingsEditPage = (props) => {
-  const { onChangePage, customersDictSettingsData } = props;
+  const {
+    onChangePage,
+    data: { data: customersDictSettingsData },
+  } = props;
   const classes = useStyles();
   return (
     <BaseLayout>
@@ -40,4 +47,8 @@ CustomerDictSettingsEditPage.propTypes = {
   customersDictSettingsData: PropTypes.object,
 };
 
-export default WithAuthHOC(CustomerDictSettingsEditPage);
+export default WithAuthHOC(
+  WithFetchLoadingHOC(CustomerDictSettingsEditPage, {
+    url: getCustomerSettingsOptions().url,
+  })
+);

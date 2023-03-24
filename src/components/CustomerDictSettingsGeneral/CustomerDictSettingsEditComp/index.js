@@ -80,20 +80,20 @@ const CustomerDictSettingsEditComp = (props) => {
             <Grid container item spacing={3}>
               <Grid item flexGrow={0} width="50%">
                 <TextField
+                  id="input-first-name"
                   label="First name"
                   value={firstName}
                   onChange={(event) => setFirstName(event.target.value)}
-                  defaultValue={first_name}
                   // helperText="Incorrect entry."
                   variant="standard"
                 />
               </Grid>
               <Grid item flexGrow={0} width="50%">
                 <TextField
+                  id="input-last-name"
                   label="Last name"
                   value={lastName}
                   onChange={(event) => setLastName(event.target.value)}
-                  defaultValue={last_name}
                   variant="standard"
                 />
               </Grid>
@@ -101,19 +101,19 @@ const CustomerDictSettingsEditComp = (props) => {
             <Grid container item spacing={3}>
               <Grid item flexGrow={0} width="50%">
                 <TextField
+                  id="input-email-address"
                   label="Email address"
                   value={emailAddress}
                   onChange={(event) => setEmailAddress(event.target.value)}
-                  defaultValue={email_address}
                   variant="standard"
                 />
               </Grid>
               <Grid item flexGrow={0} width="50%">
                 <TextField
+                  id="input-mobile"
                   label="Mobile"
                   value={mobileNumber}
                   onChange={(event) => setMobileNumber(event.target.value)}
-                  defaultValue={mobile_number}
                   variant="standard"
                 />
               </Grid>
@@ -122,7 +122,6 @@ const CustomerDictSettingsEditComp = (props) => {
               <FormControlLabel
                 control={
                   <Checkbox
-                    defaultChecked={isAgreeSendMessagesOnEmail}
                     value={isAgreeSendMessagesOnEmailState}
                     onChange={(event) =>
                       setIsAgreeSendMessagesOnEmailState(event.target.checked)

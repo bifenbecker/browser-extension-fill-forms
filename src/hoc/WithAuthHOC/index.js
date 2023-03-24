@@ -6,11 +6,12 @@ import LoginPage from "../../pages/AuthPage/LoginPage";
 // Constants
 import { NEED_TO_LOGIN } from "../../utils/constants";
 
-// Utils
-import { isUserAuthenticated } from "../../utils/utils";
+// Hooks
+import useAuth from "../../hooks/useAuth";
 
 const WithAuthHOC = (WrappedComponent) => (props) => {
-  return isUserAuthenticated() ? (
+  const [isAuth] = useAuth();
+  return isAuth ? (
     <WrappedComponent {...props} />
   ) : (
     <LoginPage {...props} messageToUser={NEED_TO_LOGIN} />

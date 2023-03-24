@@ -12,22 +12,27 @@ import { getAuthHeaders, validateResponse } from "../utils/utils";
 const URL = `${SERVER_HOST}:${SERVER_PORT}/${API_URL_VERSION}/${API_CUSTOMER_SETTINGS}/`;
 
 export function getCustomerSettings() {
-  const headers = getAuthHeaders();
-  const data = fetch(`${URL}`, {
-    headers,
-  })
-    .then(async (response) => {
-      return await validateResponse(response);
+  return getAuthHeaders().then((authHeaders) => {
+    const data = fetch(`${URL}`, {
+      headers: authHeaders,
     })
-    .catch((error) => {
-      console.error("Get customer's settings error", error);
-      throw new Error(error);
-    });
-  return data;
+      .then(async (response) => {
+        return await validateResponse(response);
+      })
+      .catch((error) => {
+        console.error("Get customer's settings error", error);
+        throw new Error(error);
+      });
+    return data;
+  });
 }
 
-export function updateCustomerSettings(newCustomerSettings) {
-  const authHeaders = getAuthHeaders();
+export const getCustomerSettingsOptions = () => ({
+  url: URL,
+});
+
+export async function updateCustomerSettings(newCustomerSettings) {
+  const authHeaders = await getAuthHeaders();
   const data = fetch(`${URL}`, {
     method: "PATCH",
     body: JSON.stringify(newCustomerSettings),

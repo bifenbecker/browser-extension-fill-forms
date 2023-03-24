@@ -3,11 +3,10 @@ import React, { useState } from "react";
 // Components
 import Loader from "../../components/Loader";
 
-const WithLoadingHOC = (WrappedComponent) => {
+const WithLoadingHOC = (WrappedComponent, data) => {
   function HOC(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState();
-
     return (
       <>
         {isLoading && <Loader />}

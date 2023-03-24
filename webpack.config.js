@@ -1,4 +1,5 @@
 const path = require("path");
+const Dotenv = require("dotenv-webpack");
 const CopyPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -60,6 +61,9 @@ module.exports = {
       title: "ReactJS Fill Form Ext",
       filename: "index.html",
       chunks: ["popup"],
+    }),
+    new Dotenv({
+      path: `./.env`,
     }),
   ],
 };

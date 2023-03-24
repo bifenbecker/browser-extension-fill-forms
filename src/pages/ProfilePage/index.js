@@ -12,54 +12,24 @@ import CustomerDictSettingsDisplayComp from "../../components/CustomerDictSettin
 // Layouts
 import BaseLayout from "../../components/Layouts/BaseLayout";
 // Hoc
-import WithLoadingHOC from "../../hoc/WithLoadingHOC";
+import WithFetchLoadingHOC from "../../hoc/WithFetchLoadingHoc";
 import WithAuthHOC from "../../hoc/WithAuthHOC";
 // Buttons
 import EditButton from "../../components/Buttons/ActionButtons/EditButton";
 import CancelButton from "../../components/Buttons/ActionButtons/CancelButton";
 
 // API
-import { getCustomerSettings } from "../../api/customerSettings";
+import { getCustomerSettingsOptions } from "../../api/customerSettings";
 
 // Styles
 import useStyles from "./styles";
 
 const ProfilePage = (props) => {
-  const { onChangePage, setIsLoading, setErrorMessage } = props;
-  const [customersDictSettingsData, setCustomersDictSettingsData] = useState();
-  const [isEdit, setIsEdit] = useState(false);
-
+  const {
+    onChangePage,
+    data: { data: customerSettings },
+  } = props;
   const classes = useStyles();
-
-  useEffect(() => {
-    setIsLoading(true);
-    getCustomerSettings()
-      .then((data) => {
-        setCustomersDictSettingsData(data);
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorMessage(error.message);
-      })
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  useEffect(() => {
-    if (isEdit) {
-      setIsLoading(true);
-      getCustomerSettings()
-        .then((data) => {
-          onChangePage(EDIT_CUSTOMER_SETTINGS_NAME, {
-            customersDictSettingsData: data,
-          });
-        })
-        .catch((error) => {
-          console.error(error);
-          setErrorMessage(error.message);
-        })
-        .finally(() => setIsLoading(false));
-    }
-  }, [isEdit]);
 
   return (
     <BaseLayout>
@@ -69,17 +39,19 @@ const ProfilePage = (props) => {
         className={classes.customer_settings_page_wrapper}
         spacing={1}
       >
-        {customersDictSettingsData && (
+        {customerSettings && (
           <Grid item>
             <CustomerDictSettingsDisplayComp
-              customersDictSettingsData={customersDictSettingsData}
+              customersDictSettingsData={customerSettings}
             />
           </Grid>
         )}
         <Grid item ml={2}>
           <Stack direction="row" spacing={2}>
             <CancelButton onClick={() => onChangePage()} />
-            <EditButton onClick={() => setIsEdit(true)} />
+            <EditButton
+              onClick={() => onChangePage(EDIT_CUSTOMER_SETTINGS_NAME)}
+            />
           </Stack>
         </Grid>
       </Grid>
@@ -90,9 +62,12 @@ const ProfilePage = (props) => {
 BaseLayout.propTypes = {
   onChangePage: PropTypes.func,
 
-  // Props from WithLoadingHOC
-  setIsLoading: PropTypes.func,
-  setErrorMessage: PropTypes.func,
+  // Props from WithFetchLoadingHOC
+  data: PropTypes.object,
 };
 
-export default WithAuthHOC(WithLoadingHOC(ProfilePage));
+export default WithAuthHOC(
+  WithFetchLoadingHOC(ProfilePage, {
+    url: getCustomerSettingsOptions().url,
+  })
+);

@@ -6,12 +6,10 @@ import {
   API_AUTH,
   REGISTER_API_ENDPOINT,
   LOGIN_API_ENDPOINT,
-  ACCESS_TOKEN_NAME,
-  REFRESH_TOKEN_NAME,
 } from "../utils/constants";
 
 // Utils
-import { validateResponse } from "../utils/utils";
+import { validateResponse, setAuthTokens } from "../utils/utils";
 
 const URL = `${SERVER_HOST}:${SERVER_PORT}/${API_URL_VERSION}/${API_AUTH}`;
 
@@ -21,11 +19,6 @@ const getRequestOptionsToPOSTRequest = (body, additionalOptions = {}) => ({
   body: JSON.stringify(body),
   ...additionalOptions,
 });
-
-const setAuthTokens = (tokens) => {
-  localStorage.setItem(ACCESS_TOKEN_NAME, tokens.access);
-  localStorage.setItem(REFRESH_TOKEN_NAME, tokens.refresh);
-};
 
 export function registerNewUser(email, password) {
   const body = {

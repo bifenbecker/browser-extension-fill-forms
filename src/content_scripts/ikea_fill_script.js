@@ -38,11 +38,17 @@ window.addEventListener("load", (event) => {
   waitForElement(checkoutBtnSelectPath, 10000).then((checkoutBtn) => {
     console.log("find!");
     console.log(checkoutBtn);
-    checkoutBtn.click();
-    waitForElement(guestBtnSelectPath, 5000).then((guestBtn) => {
-      console.log("find!");
-      console.log(guestBtn);
-      guestBtn.click();
-    });
+    if (
+      window.confirm(
+        "Checkout button detected! Do you want to fill in automatically?"
+      )
+    ) {
+      checkoutBtn.click();
+      waitForElement(guestBtnSelectPath, 5000).then((guestBtn) => {
+        console.log("find!");
+        console.log(guestBtn);
+        guestBtn.click();
+      });
+    }
   });
 });

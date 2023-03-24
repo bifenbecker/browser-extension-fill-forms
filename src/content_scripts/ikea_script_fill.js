@@ -4,30 +4,53 @@ const calculateCostBtnSelectPath =
 const chooseDeliveryOptionBtnSelectPath = "#HOME_DELIVERY > button";
 const continueBtnSelectPath =
   "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHf.hlENrP > button";
+const textContinueBtnSelectPath =
+  "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHf.hlENrP > button > span > span";
 const editPostCodeBtnSelectPath =
   "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHf.hlENrP > div.sc-hmTbGb.fPnYFC > strong > a";
 const firstNameInputSelectPath = "#REGULAR-shipping-firstName";
+const lastNameInputSelectPath = "#REGULAR-shipping-lastName";
+const emailInputSelectPath = "#REGULAR-shipping-email";
+const mobileInputSelectPath = "#REGULAR-shipping-mobileNumber";
 
 const isVisibleElement = (element) =>
   element ? element.offsetParent !== null : false;
+
+const isClickableElement = (element) =>
+  element &&
+  (element.getAttribute("onclick") != null ||
+    element.getAttribute("href") != null);
 
 /**
  * Wait for an element before resolving a promise
  * @param {String} querySelector - Selector of element to wait for
  * @param {Integer} timeout - Milliseconds to wait before timing out, or 0 for no timeout
  */
-function waitForElement(querySelector, timeout) {
+function waitForElement(querySelector, timeout, validator = null) {
   return new Promise((resolve, reject) => {
     var timer = false;
+    var isValid = true;
+
+    const validate = () => {
+      if (validator && validator instanceof Function) {
+        isValid = validator();
+      }
+    };
+
     let element = document.querySelector(querySelector);
-    if (element && isVisibleElement(element)) return resolve(element);
+    if (element && isVisibleElement(element)) {
+      validate();
+      return isValid && resolve(element);
+    }
     const observer = new MutationObserver(() => {
       element = document.querySelector(querySelector);
-      console.log(isVisibleElement(element));
       if (element && isVisibleElement(element)) {
-        observer.disconnect();
-        if (timer !== false) clearTimeout(timer);
-        return resolve(element);
+        validate();
+        if (isValid) {
+          observer.disconnect();
+          if (timer !== false) clearTimeout(timer);
+          return resolve(element);
+        }
       }
     });
     observer.observe(document.body, {
@@ -37,7 +60,7 @@ function waitForElement(querySelector, timeout) {
     if (timeout)
       timer = setTimeout(() => {
         observer.disconnect();
-        reject("Not found such element");
+        reject(`Not found such element - ${querySelector}`);
       }, timeout);
   });
 }
@@ -56,38 +79,77 @@ function waitForElementWithInfo(querySelector, timeout) {
 
 const requestCustomersSettings = () => {
   return new Promise((resolve, reject) => {
-    StorageService.getValue("access_token").then((token) => console.log(token));
-    fetch("http://127.0.0.1:8000/api/v1/customer/settings/").then(
-      async (response) => {
-        const data = await response.json();
-        console.log(data);
-      }
-    );
+    chrome.storage.sync.get(["access_token"]).then((result) => {
+      const { access_token } = result;
+      fetch("http://127.0.0.1:8000/api/v1/customer/settings/", {
+        headers: {
+          Authorization: `JWT ${access_token}`,
+        },
+      })
+        .then(async (response) => {
+          const data = await response.json();
+          resolve(data);
+        })
+        .catch((error) => reject(error));
+    });
   });
+};
+
+const inputDataInField = (field, data) => {
+  var inputEvent = new Event("input", {
+    bubbles: true,
+    cancelable: true,
+  });
+  field.dispatchEvent(inputEvent);
+  field.value = data;
+  field.dispatchEvent(inputEvent);
 };
 
 const chooseDeliveryOptionAndContinue = () => {
   waitForElementWithInfo(chooseDeliveryOptionBtnSelectPath, 20000).then(
     (chooseDeliveryOptionBtn) => {
       chooseDeliveryOptionBtn.click();
-      waitForElementWithInfo(continueBtnSelectPath, 20000).then(
-        (continueBtn) => {
-          continueBtn.click();
-          waitForElementWithInfo(firstNameInputSelectPath, 10000).then(
-            (firstNameInput) => {
-              firstNameInput.select();
-              var inputEvent = new Event("input", {
-                bubbles: true,
-                cancelable: true,
-              });
-              firstNameInput.dispatchEvent(inputEvent);
-              firstNameInput.value = "Name";
-              firstNameInput.dispatchEvent(inputEvent);
-              // requestCustomersSettings();
-            }
-          );
-        }
-      );
+      const validatorForContinueBtn = () => {
+        const isValidText = waitForElement(textContinueBtnSelectPath, 500)
+          .then((spanText) => spanText.innerText === "Continue")
+          .catch(() => false);
+
+        const isValidBtn = waitForElement(continueBtnSelectPath, 500)
+          .then((btn) => !btn.disabled)
+          .catch(() => false);
+        return isValidText && isValidBtn;
+      };
+      waitForElementWithInfo(
+        continueBtnSelectPath,
+        20000,
+        validatorForContinueBtn
+      ).then((continueBtn) => {
+        setTimeout(() => continueBtn.click(), 10000);
+        waitForElementWithInfo(firstNameInputSelectPath, 10000).then(
+          (firstNameInput) => {
+            firstNameInput.select();
+            requestCustomersSettings().then((customerSettings) => {
+              const {
+                email_address,
+                first_name,
+                full_name,
+                isAgreeSendMessagesOnEmail,
+                last_name,
+                mobile_number,
+              } = customerSettings;
+              const lastNameInput = document.querySelector(
+                lastNameInputSelectPath
+              );
+              const emailInput = document.querySelector(emailInputSelectPath);
+              const mobileInput = document.querySelector(mobileInputSelectPath);
+              inputDataInField(firstNameInput, first_name);
+              inputDataInField(lastNameInput, last_name);
+              inputDataInField(emailInput, email_address);
+              inputDataInField(mobileInput, mobile_number);
+            });
+          }
+        );
+      });
     }
   );
 };
@@ -113,7 +175,7 @@ window.addEventListener("load", () => {
       );
     })
     .catch((error) => {
-      waitForElementWithInfo(editPostCodeBtnSelectPath, 2000).then(() => {
+      waitForElementWithInfo(editPostCodeBtnSelectPath, 5000).then(() => {
         chooseDeliveryOptionAndContinue();
       });
     });
