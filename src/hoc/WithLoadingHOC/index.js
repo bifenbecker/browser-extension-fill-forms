@@ -1,16 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 
-const WithLoadingHOC =
-  (WrappedComponent, loading = false, errorMessage = null) =>
-  (props) => {
-    if (loading) {
-      return <div>Loading...</div>;
-    } else {
-      if (errorMessage) {
-        return <div>{errorMessage}</div>;
-      }
-    }
-    return <WrappedComponent {...props} />;
-  };
+// Components
+import Loader from "../../components/Loader";
+
+const WithLoadingHOC = (WrappedComponent, data) => {
+  function HOC(props) {
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
+    return (
+      <>
+        {isLoading && <Loader />}
+        <WrappedComponent
+          {...props}
+          setIsLoading={setIsLoading}
+          setErrorMessage={setErrorMessage}
+        />
+      </>
+    );
+  }
+
+  return HOC;
+};
 
 export default WithLoadingHOC;

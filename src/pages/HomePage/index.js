@@ -10,6 +10,10 @@ import BaseLayout from "../../components/Layouts/BaseLayout";
 // Icons
 import ProfileIcon from "../../components/Icons/ProfileIcon";
 import RegisterIcon from "../../components/Icons/RegisterIcon";
+import LogoutIcon from "../../components/Icons/LogoutIcon";
+import LoginIcon from "../../components/Icons/LoginIcon";
+// Hoc
+import WithAuthHOC from "../../hoc/WithAuthHOC";
 
 // Styles
 import useStyles from "./styles";
@@ -30,10 +34,17 @@ const HomePage = (props) => {
       >
         <Grid item>
           <Box className={classes.home_page_profile_icon_wrapper}>
-            {!isUserAuthenticated() && (
-              <RegisterIcon onChangePage={onChangePage} />
+            {isUserAuthenticated() ? (
+              <>
+                <ProfileIcon onChangePage={onChangePage} />
+                <LogoutIcon onChangePage={onChangePage} />
+              </>
+            ) : (
+              <>
+                <RegisterIcon onChangePage={onChangePage} />
+                <LoginIcon onChangePage={onChangePage} />
+              </>
             )}
-            <ProfileIcon onChangePage={onChangePage} />
           </Box>
         </Grid>
         <Grid item className={classes.home_page_title_wrapper}>
@@ -48,4 +59,4 @@ HomePage.propTypes = {
   onChangePage: PropTypes.func,
 };
 
-export default HomePage;
+export default WithAuthHOC(HomePage);

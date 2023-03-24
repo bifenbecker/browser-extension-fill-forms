@@ -1,5 +1,4 @@
-/* eslint-disable no-undef */
-import React, { useEffect } from "react";
+import React from "react";
 // Pages
 import Popup from "./pages/Popup";
 
@@ -13,10 +12,7 @@ const theme = createTheme({
 });
 
 function App() {
-  useEffect(() => {
-    chrome.storage.local.set({ key: "test" }).then(() => console.log("GOOD"));
-    chrome.storage.sync.set({ key: "test" }).then(() => console.log("GOOD"));
-  }, []);
+  console.log(theme);
   return (
     <ThemeProvider theme={theme}>
       <Popup />
