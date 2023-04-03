@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
-// MUI
-import { Grid, Stack } from "@mui/material";
-
-// Constants
-import { EDIT_CUSTOMER_SETTINGS_NAME } from "../../utils/constants";
-
 // Components
-import CustomerDictSettingsDisplayComp from "../../components/CustomerDictSettingsGeneral/CustomerDictSettingsDisplayComp";
+import BottomTabsProfile from "../../components/BottomTabsProfile";
+import TabPanel from "../../components/TabPanel";
+import TabsControl from "../../components/TabsControl";
 // Layouts
 import BaseLayout from "../../components/Layouts/BaseLayout";
 // Hoc
 import WithFetchLoadingHOC from "../../hoc/WithFetchLoadingHoc";
 import WithAuthHOC from "../../hoc/WithAuthHOC";
-// Buttons
-import EditButton from "../../components/Buttons/ActionButtons/EditButton";
-import CancelButton from "../../components/Buttons/ActionButtons/CancelButton";
 
 // API
 import { getCustomerSettingsOptions } from "../../api/customerSettings";
@@ -31,30 +24,21 @@ const ProfilePage = (props) => {
   } = props;
   const classes = useStyles();
 
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleChangeTab = (index) => setActiveTab(index);
+
   return (
     <BaseLayout>
-      <Grid
-        container
-        flexDirection="column"
-        className={classes.customer_settings_page_wrapper}
-        spacing={1}
-      >
-        {customerSettings && (
-          <Grid item>
-            <CustomerDictSettingsDisplayComp
-              customersDictSettingsData={customerSettings}
-            />
-          </Grid>
-        )}
-        <Grid item ml={2}>
-          <Stack direction="row" spacing={2}>
-            <CancelButton onClick={() => onChangePage()} />
-            <EditButton
-              onClick={() => onChangePage(EDIT_CUSTOMER_SETTINGS_NAME)}
-            />
-          </Stack>
-        </Grid>
-      </Grid>
+      <TabsControl activeTab={activeTab}>
+        <TabPanel>General</TabPanel>
+        <TabPanel>Addresses</TabPanel>
+        <TabPanel>Payments</TabPanel>
+      </TabsControl>
+      <BottomTabsProfile
+        handleChangeTab={handleChangeTab}
+        sx={{ maxHeight: 62 }}
+      />
     </BaseLayout>
   );
 };

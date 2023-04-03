@@ -90,15 +90,17 @@ export const validateResponse = async (response) => {
     .get("content-type")
     ?.includes("application/json");
   const data = isJson && (await response.json());
-
   // check for error response
   if (!response.ok) {
     // get error message from body or default to response status
+
     if (response.status === 401) {
-      localStorage.clear();
+      chrome.storage.sync.clear();
     }
-    const error = data || response.status;
-    return Promise.reject(error);
+    return Promise.reject(data);
   }
   return data;
 };
+
+export const formatDate = (stringDate) =>
+  new Date(stringDate).toUTCString().split(" ").slice(1, 5).join(" ");
