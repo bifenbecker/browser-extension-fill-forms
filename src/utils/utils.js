@@ -104,3 +104,10 @@ export const validateResponse = async (response) => {
 
 export const formatDate = (stringDate) =>
   new Date(stringDate).toUTCString().split(" ").slice(1, 5).join(" ");
+
+export const camelize = (str) =>
+  str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+      index === 0 ? word.toLowerCase() : word.toUpperCase()
+    )
+    .replace(/\s+/g, "");

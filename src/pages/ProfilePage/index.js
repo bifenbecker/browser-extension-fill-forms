@@ -10,6 +10,8 @@ import BaseLayout from "../../components/Layouts/BaseLayout";
 // Hoc
 import WithFetchLoadingHOC from "../../hoc/WithFetchLoadingHoc";
 import WithAuthHOC from "../../hoc/WithAuthHOC";
+// Forms
+import { GeneralSettingsForm } from "../../components/Forms";
 
 // API
 import { getCustomerSettingsOptions } from "../../api/customerSettings";
@@ -31,7 +33,9 @@ const ProfilePage = (props) => {
   return (
     <BaseLayout>
       <TabsControl activeTab={activeTab}>
-        <TabPanel>General</TabPanel>
+        <TabPanel>
+          <GeneralSettingsForm data={customerSettings} />
+        </TabPanel>
         <TabPanel>Addresses</TabPanel>
         <TabPanel>Payments</TabPanel>
       </TabsControl>
