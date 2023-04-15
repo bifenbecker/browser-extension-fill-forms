@@ -21,6 +21,9 @@ export const PROFILE_ICON_TOOLTIP_LOGIN = "Login";
 export const HOME_PAGE_ICON_TOOLTIP_LOGOUT = "Logout";
 export const PROFILE_ICON_TOOLTIP_PROFILE = "Profile";
 export const REGISTER_ICON_TOOLTIP_REGISTER = "Register";
+export const PROFILE_NAVIGATION_SETTINGS = "Settings";
+export const PROFILE_NAVIGATION_ADDRESSES = "Addresses";
+export const PROFILE_NAVIGATION_PAYMENTS = "Payments";
 
 // Resent vars
 
@@ -38,3 +41,6 @@ export const CURRENT_PAGE_NAME = "current_page";
 // Vars for requests
 export const AUTH_HEADER_NAME = "Authorization";
 export const AUTH_TOKEN_TYPE = "JWT";
+
+// REQUEST ERROR CODE
+export const ERROR_CODE_TOKEN_NOT_VALID = "token_not_valid";

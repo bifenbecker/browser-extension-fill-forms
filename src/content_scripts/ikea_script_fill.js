@@ -7,11 +7,22 @@ const continueBtnSelectPath =
 const textContinueBtnSelectPath =
   "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHf.hlENrP > button > span > span";
 const editPostCodeBtnSelectPath =
-  "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHf.hlENrP > div.sc-hmTbGb.fPnYFC > strong > a";
+  "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHf.hlENrP > div.sc-leZLoi.eoCkWN > strong";
 const firstNameInputSelectPath = "#REGULAR-shipping-firstName";
 const lastNameInputSelectPath = "#REGULAR-shipping-lastName";
 const emailInputSelectPath = "#REGULAR-shipping-email";
 const mobileInputSelectPath = "#REGULAR-shipping-mobileNumber";
+const houseNumberAndStreetSelectPath = "#REGULAR-shipping-addressLine1";
+const cityInputSelectPath = "#REGULAR-shipping-city";
+const continueBtnAddressSelectPath =
+  "#one-checkout > div.sc-dvEHMn.ekCwxE > div > div.sc-jSUZER.sc-jrcTuL.btAxHh.hlENrP > form > div.sc-fuRDZQ.iTeAkm > button";
+
+const formPaymentDataSelectPath = "#card_447126223737 > form";
+const cardNumberSelectPath = "body > form > input.IFRAME_STYLE_1";
+const cardNumberIframeSelectPath =
+  "#card_14692394738 > form > div.wpwl-group.wpwl-group-cardNumber.wpwl-clearfix > div.wpwl-wrapper.wpwl-wrapper-cardNumber > iframe";
+const expireDateSelectPath =
+  "#card_1088183497391 > form > div.wpwl-group.wpwl-group-expiry.wpwl-clearfix > div.wpwl-wrapper.wpwl-wrapper-expiry > input";
 
 const isVisibleElement = (element) =>
   element ? element.offsetParent !== null : false;
@@ -20,6 +31,16 @@ const isClickableElement = (element) =>
   element &&
   (element.getAttribute("onclick") != null ||
     element.getAttribute("href") != null);
+
+function getElementByXpath(path) {
+  return document.evaluate(
+    path,
+    document,
+    null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE,
+    null
+  ).singleNodeValue;
+}
 
 /**
  * Wait for an element before resolving a promise
@@ -105,7 +126,53 @@ const inputDataInField = (field, data) => {
   field.dispatchEvent(inputEvent);
 };
 
-const chooseDeliveryOptionAndContinue = () => {
+const inputPaymentData = (payment) => {
+  const { card_number, expire_date } = payment;
+  console.info("Looking for card number input");
+  waitForElementWithInfo(cardNumberIframeSelectPath, 10000)
+    .then((cardNumberIframe) => {
+      const cardNumberInput =
+        cardNumberIframe.contentWindow.document.body.querySelector(
+          cardNumberSelectPath
+        );
+      inputDataInField(cardNumberInput, card_number);
+      const expireDateInput = document.querySelector(expireDateSelectPath);
+      const expireDate = new Date(expire_date);
+      inputDataInField(
+        expireDateInput,
+        `${expireDate.getMonth()} / ${expireDate.getFullYear()}`
+      );
+    })
+    .catch(() => {
+      const cardNumberInput = getElementByXpath("/html/body/form/input[1]");
+      console.log("find", cardNumberInput);
+      // const cardNumberInput =
+      //   cardNumberIframe.contentWindow.document.body.querySelector(
+      //     cardNumberSelectPath
+      //   );
+      inputDataInField(cardNumberInput, card_number);
+      const expireDateInput = document.querySelector(expireDateSelectPath);
+      const expireDate = new Date(expire_date);
+      inputDataInField(
+        expireDateInput,
+        `${expireDate.getMonth()} / ${expireDate.getFullYear()}`
+      );
+    });
+};
+
+const chooseDeliveryOptionAndContinue = (data) => {
+  const {
+    addresses,
+    payment_cards,
+    email_address,
+    first_name,
+    full_name,
+    isAgreeSendMessagesOnEmail,
+    last_name,
+    mobile_number,
+  } = data;
+  const mainAddress = addresses[0];
+  const mainPayment = payment_cards[0];
   waitForElementWithInfo(chooseDeliveryOptionBtnSelectPath, 20000).then(
     (chooseDeliveryOptionBtn) => {
       chooseDeliveryOptionBtn.click();
@@ -124,29 +191,35 @@ const chooseDeliveryOptionAndContinue = () => {
         20000,
         validatorForContinueBtn
       ).then((continueBtn) => {
-        setTimeout(() => continueBtn.click(), 10000);
+        setTimeout(() => continueBtn.click(), 5000);
         waitForElementWithInfo(firstNameInputSelectPath, 10000).then(
           (firstNameInput) => {
             firstNameInput.select();
-            requestCustomersSettings().then((customerSettings) => {
-              const {
-                email_address,
-                first_name,
-                full_name,
-                isAgreeSendMessagesOnEmail,
-                last_name,
-                mobile_number,
-              } = customerSettings;
-              const lastNameInput = document.querySelector(
-                lastNameInputSelectPath
-              );
-              const emailInput = document.querySelector(emailInputSelectPath);
-              const mobileInput = document.querySelector(mobileInputSelectPath);
-              inputDataInField(firstNameInput, first_name);
-              inputDataInField(lastNameInput, last_name);
-              inputDataInField(emailInput, email_address);
-              inputDataInField(mobileInput, mobile_number);
-            });
+            const lastNameInput = document.querySelector(
+              lastNameInputSelectPath
+            );
+            const emailInput = document.querySelector(emailInputSelectPath);
+            const mobileInput = document.querySelector(mobileInputSelectPath);
+            const houseNumberAndStreetInput = document.querySelector(
+              houseNumberAndStreetSelectPath
+            );
+            const cityInput = document.querySelector(cityInputSelectPath);
+            inputDataInField(firstNameInput, first_name);
+            inputDataInField(lastNameInput, last_name);
+            inputDataInField(emailInput, email_address);
+            inputDataInField(mobileInput, mobile_number);
+            const { street, house_number, flat_number, city } = mainAddress;
+            inputDataInField(
+              houseNumberAndStreetInput,
+              `${street || ""} ${house_number || ""} ${flat_number || ""}`
+            );
+            inputDataInField(cityInput, city);
+            waitForElementWithInfo(continueBtnAddressSelectPath, 2000).then(
+              (continueBtnAddress) => {
+                continueBtnAddress.click();
+                inputPaymentData(mainPayment);
+              }
+            );
           }
         );
       });
@@ -165,18 +238,24 @@ window.addEventListener("load", () => {
         cancelable: true,
       });
       postCodeInput.dispatchEvent(inputEvent);
-      postCodeInput.value = "PE2 9ET";
-      postCodeInput.dispatchEvent(inputEvent);
-      waitForElementWithInfo(calculateCostBtnSelectPath, 1000).then(
-        (calculateCostBtn) => {
-          calculateCostBtn.click();
-          chooseDeliveryOptionAndContinue();
-        }
-      );
+      requestCustomersSettings().then((data) => {
+        const { addresses } = data;
+        const mainAddress = addresses[0];
+        postCodeInput.value = mainAddress.postal_code;
+        postCodeInput.dispatchEvent(inputEvent);
+        waitForElementWithInfo(calculateCostBtnSelectPath, 1000).then(
+          (calculateCostBtn) => {
+            calculateCostBtn.click();
+            chooseDeliveryOptionAndContinue(data);
+          }
+        );
+      });
     })
     .catch((error) => {
       waitForElementWithInfo(editPostCodeBtnSelectPath, 5000).then(() => {
-        chooseDeliveryOptionAndContinue();
+        requestCustomersSettings().then((data) =>
+          chooseDeliveryOptionAndContinue(data)
+        );
       });
     });
 });

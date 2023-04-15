@@ -90,15 +90,27 @@ export const validateResponse = async (response) => {
     .get("content-type")
     ?.includes("application/json");
   const data = isJson && (await response.json());
-
   // check for error response
   if (!response.ok) {
     // get error message from body or default to response status
+
     if (response.status === 401) {
-      localStorage.clear();
+      chrome.storage.sync.clear();
     }
-    const error = data || response.status;
-    return Promise.reject(error);
+    return Promise.reject(data);
   }
   return data;
 };
+
+export const formatDate = (stringDate) =>
+  new Date(stringDate).toUTCString().split(" ").slice(1, 5).join(" ");
+
+export const camelize = (str) =>
+  str
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) =>
+      index === 0 ? word.toLowerCase() : word.toUpperCase()
+    )
+    .replace(/\s+/g, "");
+
+export const camelToSnakeCase = (str) =>
+  str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);

@@ -3,20 +3,16 @@ import { useState, useEffect } from "react";
 // Utils
 import { getAuthHeaders, validateResponse } from "../utils/utils";
 
+// Constants
+import { ERROR_CODE_TOKEN_NOT_VALID } from "../utils/constants";
+
 const useFetch = (props) => {
   const { url, options = {}, isDefaultAuth = true } = props;
-  const [data, setData] = useState({});
+  const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const handleRestore = () => {
-    setError(null);
-    setLoading(false);
-    setData({});
-  };
+  const [error, setError] = useState();
 
   useEffect(() => {
-    handleRestore();
     setLoading(true);
 
     const fetchResponse = () =>
@@ -30,12 +26,12 @@ const useFetch = (props) => {
               },
             })
               .then((response) => resolve(response))
-              .catch(() => reject());
+              .catch((error) => reject(error));
           });
         } else {
           fetch(url, options)
             .then((response) => resolve(response))
-            .catch(() => reject());
+            .catch((error) => reject(error));
         }
       });
 
@@ -46,7 +42,19 @@ const useFetch = (props) => {
           data,
         });
       })
-      .catch((error) => setError("Bad request"))
+      .catch((error) => {
+        console.error("useFetch error request - ", error);
+        const { code } = error;
+        switch (code) {
+          case ERROR_CODE_TOKEN_NOT_VALID:
+            setError(new Error("Please login again"));
+            break;
+
+          default:
+            setError(error);
+            break;
+        }
+      })
       .finally(() => setLoading(false));
   }, [url, isDefaultAuth]);
 

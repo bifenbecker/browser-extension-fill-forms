@@ -11,13 +11,7 @@ const FormBorderLayout = (props) => {
   const { children, label } = props;
   const classes = useStyles();
   return (
-    <Grid
-      container
-      flexDirection="column"
-      alignItems="start"
-      width="100%"
-      height="100%"
-    >
+    <Grid container flexDirection="column" alignItems="start">
       {label && (
         <Grid item className={classes.label}>
           {label}

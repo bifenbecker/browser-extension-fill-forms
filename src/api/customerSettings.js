@@ -51,3 +51,45 @@ export async function updateCustomerSettings(newCustomerSettings) {
     });
   return data;
 }
+
+export async function updateCustomerAddress(newAddress) {
+  const authHeaders = await getAuthHeaders();
+  const data = fetch(`${URL}address/`, {
+    method: "PATCH",
+    body: JSON.stringify(newAddress),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      ...authHeaders,
+    },
+  })
+    .then(async (response) => {
+      console.log(response);
+      return await validateResponse(response);
+    })
+    .catch((error) => {
+      console.error("Update customer's settings error", error);
+      throw new Error(error);
+    });
+  return data;
+}
+
+export async function updateCustomerPayments(newPayments) {
+  const authHeaders = await getAuthHeaders();
+  const data = fetch(`${URL}payment/`, {
+    method: "PATCH",
+    body: JSON.stringify(newPayments),
+    headers: {
+      "Content-type": "application/json; charset=UTF-8",
+      ...authHeaders,
+    },
+  })
+    .then(async (response) => {
+      console.log(response);
+      return await validateResponse(response);
+    })
+    .catch((error) => {
+      console.error("Update customer's settings error", error);
+      throw new Error(error);
+    });
+  return data;
+}
