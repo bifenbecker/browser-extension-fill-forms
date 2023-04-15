@@ -40,7 +40,7 @@ window.addEventListener("load", (event) => {
     console.log(checkoutBtn);
     if (
       window.confirm(
-        "Checkout button detected! Do you want to fill in automatically?"
+        "Fill Form Extension detected checkout button! Do you want to fill in automatically?"
       )
     ) {
       checkoutBtn.click();

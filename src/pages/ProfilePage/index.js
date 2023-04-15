@@ -11,7 +11,12 @@ import BaseLayout from "../../components/Layouts/BaseLayout";
 import WithFetchLoadingHOC from "../../hoc/WithFetchLoadingHoc";
 import WithAuthHOC from "../../hoc/WithAuthHOC";
 // Forms
-import { GeneralSettingsForm } from "../../components/Forms";
+import {
+  GeneralSettingsForm,
+  AddressSettingsForm,
+  PaymentsSettingsForm,
+} from "../../components/Forms";
+import { GeneralTab } from "../../components/Tabs";
 
 // API
 import { getCustomerSettingsOptions } from "../../api/customerSettings";
@@ -34,10 +39,20 @@ const ProfilePage = (props) => {
     <BaseLayout>
       <TabsControl activeTab={activeTab}>
         <TabPanel>
-          <GeneralSettingsForm data={customerSettings} />
+          <div className={classes.form_wrapper}>
+            <GeneralTab data={customerSettings} />
+          </div>
         </TabPanel>
-        <TabPanel>Addresses</TabPanel>
-        <TabPanel>Payments</TabPanel>
+        <TabPanel>
+          <div className={classes.form_wrapper}>
+            <AddressSettingsForm addresses={customerSettings.addresses} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className={classes.form_wrapper}>
+            <PaymentsSettingsForm payments={customerSettings.payment_cards} />
+          </div>
+        </TabPanel>
       </TabsControl>
       <BottomTabsProfile
         handleChangeTab={handleChangeTab}

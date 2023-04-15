@@ -1,19 +1,21 @@
 import React from "react";
 
 // MUI
-import { Button } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
+
+import BaseFormButton from "../../FormButtons/BaseFormButton";
 
 const SaveButton = (props) => {
   return (
-    <Button
-      variant="contained"
+    <BaseFormButton
+      type="submit"
+      variant="outlined"
       color="success"
       endIcon={<CheckIcon />}
       {...props}
     >
       Save
-    </Button>
+    </BaseFormButton>
   );
 };
 

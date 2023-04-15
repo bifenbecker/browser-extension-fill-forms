@@ -1,111 +1,126 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 
-import { Grid, Button, TextField } from "@mui/material";
+// MUI
+import { Grid } from "@mui/material";
 
 // Layouts
 import FormBorderLayout from "../../Layouts/FormBorderLayout";
 
-// Utils
-import { camelize } from "../../../utils/utils";
+// Components
+import ControlledTextField from "../ControlledTextField";
+import SaveButton from "../../Buttons/ActionButtons/SaveButton";
 
-const schema = yup
-  .object({
-    firstName: yup
-      .string()
-      .min(4, "Name must be longer")
-      .max(30, "Name must be shorter"),
-    lastName: yup
-      .string()
-      .min(4, "Last name must be longer")
-      .max(30, "Last name must be shorter"),
-    mobile: yup
-      .string()
-      .min(4, "Mobile must be longer")
-      .max(30, "Mobile must be shorter"),
-    email: yup
-      .string()
-      .email("Enter please Email address")
-      .required("Email address is required"),
-  })
-  .required();
+import BaseSettings from "../BaseSettings";
 
-const ControlledTextField = ({ label, control, defaultValue }) => (
-  <Controller
-    control={control}
-    name={camelize(label)}
-    // defaultValue={defaultValue}
-    render={({ field, fieldState: { error } }) => (
-      <TextField
-        {...field}
-        label={label}
-        error={!!error}
-        helperText={error && error.message}
-        variant="standard"
-        fullWidth
-      />
-    )}
-  />
-);
+// schema
+import schema from "./validation";
 
-const GeneralSettingsForm = ({ data }) => {
+// API
+import { updateCustomerSettings } from "../../../api/customerSettings";
+import { camelToSnakeCase } from "../../../utils/utils";
+
+const GeneralSettingsForm = ({ data, onSubmit }) => {
+  // const [settings, setSettings] = useState(data);
+  console.log(onSubmit);
   const { control, handleSubmit } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
     defaultValues: {
       firstName: data.first_name,
       lastName: data.last_name,
-      mobile: data.mobile_number,
+      mobileNumber: data.mobile_number,
       email: data.email_address,
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  // const onSubmit = async (data) => {
+  //   const processData = (data) => {
+  //     const newData = {};
+  //     Object.keys(data).forEach((key) => {
+  //       const newKeyName = camelToSnakeCase(key.toString());
+  //       newData[newKeyName] = data[key];
+  //     });
+  //     return newData;
+  //   };
+
+  //   const processedData = processData(data);
+  //   const responseData = await updateCustomerSettings(processedData);
+  //   console.info(responseData);
+  //   setSettings(responseData);
+  // };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormBorderLayout>
-        <Grid container rowSpacing={1} columnSpacing={1}>
-          <Grid item xs={6}>
-            <ControlledTextField
-              control={control}
-              label="First Name"
-              defaultValue=""
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <ControlledTextField
-              control={control}
-              label="Last Name"
-              defaultValue=""
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <ControlledTextField
-              control={control}
-              label="Email"
-              defaultValue=""
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <ControlledTextField
-              control={control}
-              label="Mobile"
-              defaultValue=""
-            />
-          </Grid>
+    <form onSubmit={handleSubmit(onSubmit)} id="GeneralSettingsForm">
+      <Grid container rowSpacing={1} columnSpacing={1}>
+        <Grid item xs={6}>
+          <ControlledTextField control={control} label="First Name" />
         </Grid>
-      </FormBorderLayout>
-      <Button type="submit">Submit</Button>
+        <Grid item xs={6}>
+          <ControlledTextField control={control} label="Last Name" />
+        </Grid>
+        <Grid item xs={6}>
+          <ControlledTextField control={control} label="Email" />
+        </Grid>
+        <Grid item xs={6}>
+          <ControlledTextField control={control} label="Mobile number" />
+        </Grid>
+      </Grid>
     </form>
+
+    // <BaseSettings
+    //   handleSubmit={updateCustomerSettings}
+    //   formSubmit={handleSubmit}
+    //   data={data}
+    // >
+    //   <Grid container rowSpacing={1} columnSpacing={1}>
+    //     <Grid item xs={6}>
+    //       <ControlledTextField control={control} label="First Name" />
+    //     </Grid>
+    //     <Grid item xs={6}>
+    //       <ControlledTextField control={control} label="Last Name" />
+    //     </Grid>
+    //     <Grid item xs={6}>
+    //       <ControlledTextField control={control} label="Email" />
+    //     </Grid>
+    //     <Grid item xs={6}>
+    //       <ControlledTextField control={control} label="Mobile number" />
+    //     </Grid>
+    //   </Grid>
+    // </BaseSettings>
+    // <form onSubmit={handleSubmit(onSubmit)}>
+    //   <Grid container rowSpacing={2}>
+    //     <Grid item xs={12}>
+    //       <FormBorderLayout>
+    //         <Grid container rowSpacing={1} columnSpacing={1}>
+    //           <Grid item xs={6}>
+    //             <ControlledTextField control={control} label="First Name" />
+    //           </Grid>
+    //           <Grid item xs={6}>
+    //             <ControlledTextField control={control} label="Last Name" />
+    //           </Grid>
+    //           <Grid item xs={6}>
+    //             <ControlledTextField control={control} label="Email" />
+    //           </Grid>
+    //           <Grid item xs={6}>
+    //             <ControlledTextField control={control} label="Mobile" />
+    //           </Grid>
+    //         </Grid>
+    //       </FormBorderLayout>
+    //     </Grid>
+    //     <Grid item xs={12} justifySelf="start" alignSelf="self-start">
+    //       <SaveButton />
+    //     </Grid>
+    //   </Grid>
+    // </form>
   );
 };
 
-GeneralSettingsForm.propTypes = {};
+GeneralSettingsForm.propTypes = {
+  data: PropTypes.object,
+  onSubmit: PropTypes.func,
+};
 
 export default GeneralSettingsForm;

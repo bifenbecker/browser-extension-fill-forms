@@ -111,3 +111,6 @@ export const camelize = (str) =>
       index === 0 ? word.toLowerCase() : word.toUpperCase()
     )
     .replace(/\s+/g, "");
+
+export const camelToSnakeCase = (str) =>
+  str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
