@@ -20,6 +20,24 @@
       ],
       "js": ["content_scripts/ikea/ikea_script_fill.js"]
     },
+    // Waterstones
+    {
+      "matches": ["https://www.waterstones.com/registration/"],
+      "js": ["content_scripts/water_stones_site/registration_script.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/checkout/basket"],
+      "js": ["content_scripts/water_stones_site/checkout_script.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/checkout/delivery"],
+      "js": ["content_scripts/water_stones_site/delivery_details_script.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/checkout/payment"],
+      "js": ["content_scripts/water_stones_site/payment_script.js"]
+    },
+    // Rocketblocks
     {
       "matches": ["https://www.rocketblocks.me/signup/collectUsername.php?*"],
       "js": ["content_scripts/rocket_blocks/registration_script.js"]
