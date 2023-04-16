@@ -18,6 +18,22 @@
         "https://www.ikea.com/gb/en/order/continue/?checkoutVersion=v*&checkoutId=*"
       ],
       "js": ["content_scripts/ikea_script_fill.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/registration/"],
+      "js": ["content_scripts/water_stones_site/registration_script.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/checkout/basket"],
+      "js": ["content_scripts/water_stones_site/checkout_script.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/checkout/delivery"],
+      "js": ["content_scripts/water_stones_site/delivery_details_script.js"]
+    },
+    {
+      "matches": ["https://www.waterstones.com/checkout/payment"],
+      "js": ["content_scripts/water_stones_site/payment_script.js"]
     }
   ]
 }
