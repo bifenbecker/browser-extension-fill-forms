@@ -18,6 +18,14 @@
         "https://www.ikea.com/gb/en/order/continue/?checkoutVersion=v*&checkoutId=*"
       ],
       "js": ["content_scripts/ikea_script_fill.js"]
+    },
+    {
+      "matches": ["https://www.rocketblocks.me/signup/collectUsername.php?*"],
+      "js": ["content_scripts/rocket_blocks/registration_script.js"]
+    },
+    {
+      "matches": ["https://www.rocketblocks.me/signup/collectPayment.php?*"],
+      "js": ["content_scripts/rocket_blocks/payment_info_script.js"]
     }
   ]
 }
