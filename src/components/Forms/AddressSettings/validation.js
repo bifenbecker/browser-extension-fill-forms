@@ -5,18 +5,18 @@ const schema = yup
     city: yup
       .string()
       .nullable()
-      .min(2, "Name must be longer")
-      .max(20, "Name must be shorter"),
+      .min(2, "City must be longer")
+      .max(20, "City must be shorter"),
     country: yup
       .string()
       .nullable()
-      .min(2, "Last name must be longer")
-      .max(30, "Last name must be shorter"),
+      .min(2, "Country must be longer")
+      .max(30, "Country must be shorter"),
     street: yup
       .string()
       .nullable()
-      .min(2, "Last name must be longer")
-      .max(20, "Last name must be shorter"),
+      .min(2, "Street must be longer")
+      .max(50, "Street must be shorter"),
     flatNumber: yup
       .number()
       .transform((value) => (isNaN(value) ? undefined : value))
