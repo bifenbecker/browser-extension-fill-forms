@@ -9,16 +9,18 @@
     "default_popup": "index.html"
   },
   "content_scripts": [
+    // Ikea
     {
       "matches": ["https://www.ikea.com/*/shoppingcart/"],
-      "js": ["content_scripts/ikea_fill_script.js"]
+      "js": ["content_scripts/ikea/ikea_fill_script.js"]
     },
     {
       "matches": [
         "https://www.ikea.com/gb/en/order/continue/?checkoutVersion=v*&checkoutId=*"
       ],
-      "js": ["content_scripts/ikea_script_fill.js"]
+      "js": ["content_scripts/ikea/ikea_script_fill.js"]
     },
+    // Waterstones
     {
       "matches": ["https://www.waterstones.com/registration/"],
       "js": ["content_scripts/water_stones_site/registration_script.js"]
@@ -34,6 +36,37 @@
     {
       "matches": ["https://www.waterstones.com/checkout/payment"],
       "js": ["content_scripts/water_stones_site/payment_script.js"]
+    },
+    // Rocketblocks
+    {
+      "matches": ["https://www.rocketblocks.me/signup/collectUsername.php?*"],
+      "js": ["content_scripts/rocket_blocks/registration_script.js"]
+    },
+    {
+      "matches": ["https://www.rocketblocks.me/signup/collectPayment.php?*"],
+      "js": ["content_scripts/rocket_blocks/payment_info_script.js"]
+    },
+
+    // ROH
+    {
+      "matches": ["https://www.roh.org.uk/account/register"],
+      "js": ["content_scripts/royal_opera_house/registration_script.js"]
+    },
+    {
+      "matches": ["https://shop.roh.org.uk/cart"],
+      "js": ["content_scripts/royal_opera_house/checkout_script.js"]
+    },
+    {
+      "matches": ["https://shop.roh.org.uk/checkouts/c/*/information?_ga=*"],
+      "js": ["content_scripts/royal_opera_house/fill_data_script.js"]
+    },
+    {
+      "matches": ["https://shop.roh.org.uk/checkouts/c/*/shipping"],
+      "js": ["content_scripts/royal_opera_house/accept_shipping_to_payment.js"]
+    },
+    {
+      "matches": ["https://shop.roh.org.uk/checkouts/c/*/payment"],
+      "js": ["content_scripts/royal_opera_house/payment_script.js"]
     }
   ]
 }

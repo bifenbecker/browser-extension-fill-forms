@@ -21,6 +21,7 @@ import { camelToSnakeCase } from "../../../utils/utils";
 
 const AddressSettingsForm = ({ addresses }) => {
   const [address, setAddress] = useState(addresses[0]);
+  console.log(address);
   const { control, handleSubmit } = useForm({
     mode: "onChange",
     resolver: yupResolver(schema),
