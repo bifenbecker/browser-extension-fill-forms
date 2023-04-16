@@ -20,6 +20,14 @@
       ],
       "js": ["content_scripts/ikea/ikea_script_fill.js"]
     },
+    {
+      "matches": ["https://www.rocketblocks.me/signup/collectUsername.php?*"],
+      "js": ["content_scripts/rocket_blocks/registration_script.js"]
+    },
+    {
+      "matches": ["https://www.rocketblocks.me/signup/collectPayment.php?*"],
+      "js": ["content_scripts/rocket_blocks/payment_info_script.js"]
+    },
 
     // ROH
     {
