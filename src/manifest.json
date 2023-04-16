@@ -20,6 +20,17 @@
       ],
       "js": ["content_scripts/ikea/ikea_script_fill.js"]
     },
+    {
+      "matches": [
+        "https://www.etsy.com/cart?*",
+        "https://www.etsy.com/*/cart?*"
+      ],
+      "js": ["content_scripts/etsy/checkout_script.js"]
+    },
+    {
+      "matches": ["https://www.etsy.com/cart/*/review/shipping"],
+      "js": ["content_scripts/etsy/address_script.js"]
+    },
     // Waterstones
     {
       "matches": ["https://www.waterstones.com/registration/"],
