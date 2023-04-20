@@ -27,6 +27,20 @@ export function getCustomerSettings() {
   });
 }
 
+export function getCustomerSettingsInit() {
+  return getAuthHeaders().then((authHeaders) => {
+    const data = fetch(`${URL}init/`, {
+      headers: authHeaders,
+    })
+      .then((response) => response)
+      .catch((error) => {
+        console.error("Init customer's settings error", error);
+        throw new Error(error);
+      });
+    return data;
+  });
+}
+
 export const getCustomerSettingsOptions = () => ({
   url: URL,
 });

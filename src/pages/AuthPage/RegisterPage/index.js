@@ -14,6 +14,7 @@ import { FILL_FORM_PAGE_NAME } from "../../../utils/constants";
 
 // API
 import { registerNewUser, loginUser } from "../../../api/auth";
+import { getCustomerSettingsInit } from "../../../api/customerSettings";
 
 const RegisterPage = (props) => {
   const { onChangePage } = props;
@@ -30,13 +31,11 @@ const RegisterPage = (props) => {
     registerNewUser(registerUserEmail, registerUserPassword)
       .then((data) => {
         console.log("Register new user ", data.email);
-        loginUser(registerUserEmail, registerUserPassword).then(() =>
-          onChangePage(FILL_FORM_PAGE_NAME)
-        );
-        // .catch((error) => {
-        //   con
-        //   throw new Error(error);
-        // });
+        loginUser(registerUserEmail, registerUserPassword).then(() => {
+          getCustomerSettingsInit()
+            .then(() => onChangePage(FILL_FORM_PAGE_NAME))
+            .catch((error) => console.error(error));
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -46,19 +45,30 @@ const RegisterPage = (props) => {
 
   return (
     <BaseLayout>
-      <Grid item flexGrow={1}>
-        <AuthFormComp
-          onChangeEmail={handleChangeUserEmail}
-          onChangePassword={handleChangeUserPassword}
-          buttonText="Register"
-          onSubmit={handleSubmitForm}
-        />
-      </Grid>
-      {registerUserError && (
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="center"
+        gap={3}
+        flexGrow={1}
+      >
         <Grid item>
-          <Typography>{registerUserError}</Typography>
+          <Typography variant="h6">Register new user</Typography>
         </Grid>
-      )}
+        <Grid item>
+          <AuthFormComp
+            onChangeEmail={handleChangeUserEmail}
+            onChangePassword={handleChangeUserPassword}
+            buttonText="Register"
+            onSubmit={handleSubmitForm}
+          />
+        </Grid>
+        {registerUserError && (
+          <Grid item>
+            <Typography>{registerUserError}</Typography>
+          </Grid>
+        )}
+      </Grid>
     </BaseLayout>
   );
 };

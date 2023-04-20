@@ -43,8 +43,14 @@ const LoginPage = (props) => {
   return (
     <BaseLayout>
       {messageToUser && (
-        <Grid item className={classes.message_container}>
-          <Typography>{messageToUser}</Typography>
+        <Grid
+          item
+          xs={6}
+          justifyContent="center"
+          alignItems="center"
+          flexGrow={1}
+        >
+          <Typography variant="h6">{messageToUser}</Typography>
         </Grid>
       )}
       <Grid item className={classes.form_container}>
@@ -53,6 +59,7 @@ const LoginPage = (props) => {
           onChangePassword={handleChangeUserPassword}
           buttonText="Login"
           onSubmit={handleSubmitForm}
+          onChangePage={onChangePage}
         />
       </Grid>
       {registerUserError && (

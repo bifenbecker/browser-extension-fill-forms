@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
 import { Grid } from "@mui/material";
@@ -9,7 +9,15 @@ import FormBorderLayout from "../../Layouts/FormBorderLayout";
 import { camelToSnakeCase } from "../../../utils/utils";
 
 const BaseSettings = ({ handleSubmit, data, children }) => {
-  const [formData, setFormData] = useState(data);
+  const [formData, setFormData] = useState();
+
+  useEffect(() => {
+    if (Array.isArray(data)) {
+      setFormData(data[0]); // TODO Choose active instance
+    } else {
+      setFormData(data);
+    }
+  }, []);
 
   const onSubmit = async (data) => {
     const processData = (data) => {
@@ -28,24 +36,26 @@ const BaseSettings = ({ handleSubmit, data, children }) => {
   };
 
   return (
-    <Grid container rowSpacing={2}>
-      <Grid item xs={12}>
-        <FormBorderLayout>
-          {React.cloneElement(children, {
-            data: formData,
-            onSubmit,
-          })}
-        </FormBorderLayout>
+    formData && (
+      <Grid container rowSpacing={2}>
+        <Grid item xs={12}>
+          <FormBorderLayout>
+            {React.cloneElement(children, {
+              data: formData,
+              onSubmit,
+            })}
+          </FormBorderLayout>
+        </Grid>
+        <Grid item xs={12} justifySelf="start" alignSelf="self-start">
+          <SaveButton form={children.type.name || children.displayName} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} justifySelf="start" alignSelf="self-start">
-        <SaveButton form={children.type.name || children.displayName} />
-      </Grid>
-    </Grid>
+    )
   );
 };
 
 BaseSettings.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.any.isRequired,
   children: PropTypes.element.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
