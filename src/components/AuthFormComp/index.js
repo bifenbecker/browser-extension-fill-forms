@@ -7,14 +7,24 @@ import { TextField, Grid } from "@mui/material";
 // Components
 import BaseFormButton from "../Buttons/FormButtons/BaseFormButton";
 
+// Pages
+import { REGISTER_PAGE_NAME } from "../../utils/constants";
+
 const AuthFormComp = (props) => {
-  const { buttonText, onSubmit, onChangeEmail, onChangePassword } = props;
+  const {
+    buttonText,
+    onSubmit,
+    onChangeEmail,
+    onChangePassword,
+    onChangePage,
+  } = props;
+
   return (
     <Grid
       container
       direction="column"
-      justifyContent="space-around"
       alignItems="center"
+      rowSpacing={3}
       style={{ height: "100%" }}
     >
       <Grid item>
@@ -34,8 +44,25 @@ const AuthFormComp = (props) => {
           onChange={(event) => onChangePassword(event.target.value)}
         />
       </Grid>
-      <Grid item>
-        <BaseFormButton onClick={onSubmit}>{buttonText}</BaseFormButton>
+      <Grid
+        container
+        item
+        xs={12}
+        direction="row"
+        alignItems="center"
+        gap={3}
+        justifyContent="center"
+      >
+        <Grid item>
+          <BaseFormButton onClick={onSubmit}>{buttonText}</BaseFormButton>
+        </Grid>
+        {buttonText !== "Register" && (
+          <Grid item>
+            <BaseFormButton onClick={() => onChangePage(REGISTER_PAGE_NAME)}>
+              Register
+            </BaseFormButton>
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );
@@ -46,6 +73,7 @@ AuthFormComp.propTypes = {
   onSubmit: PropTypes.func,
   onChangeEmail: PropTypes.func,
   onChangePassword: PropTypes.func,
+  onChangePage: PropTypes.func,
 };
 
 export default AuthFormComp;

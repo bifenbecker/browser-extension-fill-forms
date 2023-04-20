@@ -10,13 +10,8 @@ import BaseLayout from "../../components/Layouts/BaseLayout";
 // Hoc
 import WithFetchLoadingHOC from "../../hoc/WithFetchLoadingHoc";
 import WithAuthHOC from "../../hoc/WithAuthHOC";
-// Forms
-import {
-  GeneralSettingsForm,
-  AddressSettingsForm,
-  PaymentsSettingsForm,
-} from "../../components/Forms";
-import { GeneralTab } from "../../components/Tabs";
+// Tabs
+import { GeneralTab, AddressesTab, PaymentsTab } from "../../components/Tabs";
 
 // API
 import { getCustomerSettingsOptions } from "../../api/customerSettings";
@@ -26,7 +21,6 @@ import useStyles from "./styles";
 
 const ProfilePage = (props) => {
   const {
-    onChangePage,
     data: { data: customerSettings },
   } = props;
   const classes = useStyles();
@@ -45,12 +39,12 @@ const ProfilePage = (props) => {
         </TabPanel>
         <TabPanel>
           <div className={classes.form_wrapper}>
-            <AddressSettingsForm addresses={customerSettings.addresses} />
+            <AddressesTab data={customerSettings.addresses} />
           </div>
         </TabPanel>
         <TabPanel>
           <div className={classes.form_wrapper}>
-            <PaymentsSettingsForm payments={customerSettings.payment_cards} />
+            <PaymentsTab data={customerSettings.payment_cards} />
           </div>
         </TabPanel>
       </TabsControl>
