@@ -27,7 +27,7 @@ const AddressSettingsForm = ({ data: address, onSubmit }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} id="AddressSettingsForm">
       <Grid container rowSpacing={1} columnSpacing={1}>
         <Grid item xs={6}>
           <ControlledTextField control={control} label="Country" />

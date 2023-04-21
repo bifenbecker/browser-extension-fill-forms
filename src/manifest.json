@@ -68,7 +68,7 @@
       "js": ["content_scripts/royal_opera_house/checkout_script.js"]
     },
     {
-      "matches": ["https://shop.roh.org.uk/checkouts/c/*/information?_ga=*"],
+      "matches": ["https://shop.roh.org.uk/checkouts/c/*/information*"],
       "js": ["content_scripts/royal_opera_house/fill_data_script.js"]
     },
     {

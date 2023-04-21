@@ -1,13 +1,15 @@
-const firstNameInputSelectPath = "#TextField1";
+const firstNameInputSelectPath = "input[name='firstName']";
 const emailMeCheckboxSelectPath = "#marketing_opt_in";
-const lastNameInputSelectPath = "#TextField2";
-const addressInputSelectPath = "#TextField9";
-const apartmentInputSelectPath = "#TextField5";
-const postalCodeInputSelectPath = "#TextField10";
-const cityInputSelectPath = "#TextField11";
-const phoneInputSelectPath = "#TextField8";
+const lastNameInputSelectPath = "input[name='lastName']";
+const addressInputSelectPath = "input[name='address1']";
+const apartmentInputSelectPath = "input[name='address2']";
+const postalCodeInputSelectPath = "input[name='postalCode']";
+const cityInputSelectPath = "input[name='city']";
+const phoneInputSelectPath = "input[name='phone']";
 const continueToShippingBtnSelectPath =
   "#Form1 > div:nth-child(1) > div > div.VheJw > div.oQEAZ.WD4IV > div:nth-child(1) > button";
+
+const emailInputSelectPath = "input[name='email']";
 
 /**
  * Wait for an element before resolving a promise
@@ -74,6 +76,9 @@ window.addEventListener("load", (event) => {
           mainAddress;
         waitForElement(firstNameInputSelectPath, 5000).then(
           (firstNameInput) => {
+            waitForElement(emailInputSelectPath, 1000).then((emailInput) =>
+              inputDataInField(emailInput, email_address)
+            );
             const emailMeCheckbox = document.querySelector(
               emailMeCheckboxSelectPath
             );

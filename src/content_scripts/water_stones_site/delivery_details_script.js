@@ -6,6 +6,10 @@ const countrySelectPath = "#txtCountyDelivery";
 const postCodeSelectPath = "#txtPostCodeDeliveryManual";
 const nextPaymentSelectPath =
   "body > div.row.chk-surround.large-min-height > div.small-24.chk-left.medium-24.large-18.columns.main-container > div.panel-content-delivery.display-none.small-24.medium-24.large-24.columns.small-border.medium-border.large-border.small-margin-top-24.medium-margin-top-24.large-margin-top-24 > div:nth-child(11) > div > div.btnCheckOutTablet.small-24.medium-7.large-7.columns.small-padding-right-18.medium-padding-right-18.large-padding-right-18.small-padding-left-18.medium-padding-left-18.large-padding-left-18.small-margin-top-12.medium-margin-top-6.float-right > input";
+const radioInputNoAccSelectPath = "#radAccountNo";
+const radioInputDeliveryAddressSelectPath = "#radDeliveryLocationAddress";
+const firstNameInputSelectPath = "#txtFirstNameDelivery";
+const lastNameInputSelectPath = "#txtLastNameDelivery";
 
 /**
  * Wait for an element before resolving a promise
@@ -49,29 +53,45 @@ const inputDataInField = (field, data) => {
 
 window.addEventListener("load", () => {
   console.log("Page load");
-  waitForElement(editAddressManuallySelectPath, 10000).then(
-    (editAddressManually) => {
-      editAddressManually.click();
-      waitForElement(address1SelectPath, 5000).then((address1Input) => {
-        chrome.storage.sync.get(["access_token"]).then((result) => {
-          const { access_token } = result;
-          fetch("http://127.0.0.1:8000/api/v1/customer/settings/", {
-            headers: {
-              Authorization: `JWT ${access_token}`,
-            },
-          })
-            .then(async (response) => {
-              const data = await response.json();
-              const { addresses } = data;
-              const mainAddress = addresses[0] || {};
-              const {
-                country,
-                city,
-                street,
-                house_number,
-                flat_number,
-                postal_code,
-              } = mainAddress;
+  chrome.storage.sync.get(["access_token"]).then((result) => {
+    const { access_token } = result;
+    fetch("http://127.0.0.1:8000/api/v1/customer/settings/", {
+      headers: {
+        Authorization: `JWT ${access_token}`,
+      },
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        const { addresses, first_name, last_name } = data;
+        const mainAddress = addresses[0] || {};
+        const {
+          country,
+          city,
+          street,
+          house_number,
+          flat_number,
+          postal_code,
+        } = mainAddress;
+        waitForElement(radioInputNoAccSelectPath, 10000).then((noAccInput) => {
+          noAccInput.click();
+          const deliveryAddress = document.querySelector(
+            radioInputDeliveryAddressSelectPath
+          );
+          deliveryAddress.click();
+          waitForElement(firstNameInputSelectPath, 2000).then(
+            (firstNameInput) => {
+              inputDataInField(firstNameInput, first_name);
+              const lastNameInput = document.querySelector(
+                lastNameInputSelectPath
+              );
+              inputDataInField(lastNameInput, last_name);
+            }
+          );
+        });
+        waitForElement(editAddressManuallySelectPath, 10000).then(
+          (editAddressManually) => {
+            editAddressManually.click();
+            waitForElement(address1SelectPath, 5000).then((address1Input) => {
               const address2Input = document.querySelector(address2SelectPath);
               const cityInput = document.querySelector(citySelectPath);
               const countryInput = document.querySelector(countrySelectPath);
@@ -88,10 +108,10 @@ window.addEventListener("load", () => {
               inputDataInField(countryInput, country);
               inputDataInField(postalCodeInput, postal_code);
               nextBtn.click();
-            })
-            .catch((error) => console.error(error));
-        });
-      });
-    }
-  );
+            });
+          }
+        );
+      })
+      .catch((error) => console.error(error));
+  });
 });

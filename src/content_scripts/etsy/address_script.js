@@ -1,12 +1,14 @@
 const postalCodeInputXPath =
-  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div/div[4]/div[2]/div/div[1]/div/input";
+  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div[2]/div[5]/div[3]/div/div[1]/div/input";
+const emailInputXPath = '//*[@id="shipping-form-email-input"]';
+const confirmEmailInputXPath = '//*[@id="shipping-form-email-confirmation"]';
 const cityInputXPath =
-  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div/div[5]/div/input";
+  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div[2]/div[5]/div[1]/input";
 const aptInputXPath =
-  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div/div[6]/div/input";
+  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div[2]/div[4]/div[2]/input";
 const streetInputXPath =
-  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div/div[7]/div/input";
-const countrySelectPath = "#country_id2-select";
+  "/html/body/main/div[1]/div[1]/div/div[2]/div[1]/form/div[2]/div[4]/div[1]/input";
+const countrySelectPath = "#country_id10-select";
 const continueBtnSelectPath =
   "#shipping-address-form > div:nth-child(2) > button";
 
@@ -76,7 +78,7 @@ window.addEventListener("load", () => {
       })
         .then(async (response) => {
           const data = await response.json();
-          const { full_name, addresses } = data;
+          const { full_name, addresses, email_address } = data;
           const mainAddress = addresses[0];
           const { country, city, postal_code, street, house_number } =
             mainAddress;
@@ -90,6 +92,8 @@ window.addEventListener("load", () => {
               break;
             }
           }
+          const emailInput = getElementByXpath(emailInputXPath);
+          const emailConfirmInput = getElementByXpath(confirmEmailInputXPath);
           const postalCodeInput = getElementByXpath(postalCodeInputXPath);
           const cityInput = getElementByXpath(cityInputXPath);
           const fullNameInput = getElementByXpath(fullNameXpath);
@@ -97,6 +101,8 @@ window.addEventListener("load", () => {
           const streetInput = getElementByXpath(streetInputXPath);
 
           inputDataInField(fullNameInput, full_name);
+          inputDataInField(emailInput, email_address);
+          inputDataInField(emailConfirmInput, email_address);
           inputDataInField(postalCodeInput, postal_code);
           inputDataInField(cityInput, city);
           inputDataInField(aptInput, house_number);

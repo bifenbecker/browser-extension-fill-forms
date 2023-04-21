@@ -34,10 +34,10 @@ const GeneralSettingsForm = ({ data, onSubmit }) => {
           <ControlledTextField control={control} label="Last Name" />
         </Grid>
         <Grid item xs={6}>
-          <ControlledTextField control={control} label="Email" />
+          <ControlledTextField control={control} label="Email Address" />
         </Grid>
         <Grid item xs={6}>
-          <ControlledTextField control={control} label="Mobile number" />
+          <ControlledTextField control={control} label="Mobile Number" />
         </Grid>
       </Grid>
     </form>

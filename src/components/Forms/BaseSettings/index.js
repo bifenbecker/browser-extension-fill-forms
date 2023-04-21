@@ -17,7 +17,7 @@ const BaseSettings = ({ handleSubmit, data, children }) => {
     } else {
       setFormData(data);
     }
-  }, []);
+  }, [data]);
 
   const onSubmit = async (data) => {
     const processData = (data) => {
@@ -34,7 +34,6 @@ const BaseSettings = ({ handleSubmit, data, children }) => {
     console.info(responseData);
     setFormData(responseData);
   };
-
   return (
     formData && (
       <Grid container rowSpacing={2}>
